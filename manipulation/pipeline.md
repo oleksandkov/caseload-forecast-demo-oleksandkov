@@ -56,13 +56,13 @@ flowchart LR
 
 | # | Stage | Script | Role | Key Output |
 |:--|:------|:-------|:-----|:-----------|
-| 1 | **Ferry** | `1-ferry.R` | Import raw data from 4 equivalent sources (URL, CSV, SQLite, SQL Server) | Staging SQLite database |
-| 2 | **Ellis** | `2-ellis.R` | Transform raw data into 11 analysis-ready tables (wide + long) | Parquet files + SQLite + [CACHE-manifest](../data-public/metadata/CACHE-manifest.md) |
+| 1 | [**Ferry**](#lane-1--1-ferryr--multi-source-data-transport) | `1-ferry.R` | Import raw data from 4 equivalent sources (URL, CSV, SQLite, SQL Server) | Staging SQLite database |
+| 2 | [**Ellis**](#lane-2--2-ellisr--raw-to-analysis-transformation) | `2-ellis.R` | Transform raw data into 11 analysis-ready tables (wide + long) | Parquet files + SQLite + [CACHE-manifest](../data-public/metadata/CACHE-manifest.md) |
 | — | **EDA** | `eda-2.qmd` | Advisory — trend, seasonality, stationarity diagnostics | Quarto HTML report (not in pipeline flow) |
-| 3 | **Mint** | `3-mint-IS.R` | Train/test split, log transform, regressor matrices | `forge/` Parquet slices + `forge_manifest.yml` |
-| 4 | **Train** | `4-train-IS.R` | Fit Tier 1 (Seasonal Naïve) and Tier 2 (ARIMA) models | Model `.rds` objects + `model_registry.csv` |
-| 5 | **Forecast** | `5-forecast-IS.R` | Generate 24-month projections + backtest diagnostics | Forecast CSVs + `forecast_manifest.yml` |
-| 6 | **Report** | `report-1.qmd` | Assemble final HTML deliverable | `report-1.html` |
+| 3 | [**Mint**](#lane-3--3-mint-isr--model-ready-data-preparation) | `3-mint-IS.R` | Train/test split, log transform, regressor matrices | `forge/` Parquet slices + `forge_manifest.yml` |
+| 4 | [**Train**](#lane-4--4-train-isr--model-estimation) | `4-train-IS.R` | Fit Tier 1 (Seasonal Naïve) and Tier 2 (ARIMA) models | Model `.rds` objects + `model_registry.csv` |
+| 5 | [**Forecast**](#lane-5--5-forecast-isr--24-month-horizon-forecast-generation) | `5-forecast-IS.R` | Generate 24-month projections + backtest diagnostics | Forecast CSVs + `forecast_manifest.yml` |
+| 6 | [**Report**](#lane-6--report-1qmd--final-html-deliverable) | `report-1.qmd` | Assemble final HTML deliverable | `report-1.html` |
 
 **Lineage**: A `forge_hash` in `forge_manifest.yml` links every model and forecast back to the exact data slice that produced it. Changing `focal_date` in [`config.yml`](../config.yml) invalidates all Mint/Train/Forecast artifacts downstream.
 
