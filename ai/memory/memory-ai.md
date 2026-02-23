@@ -4,6 +4,14 @@ AI system status and technical briefings.
 
 ---
 
+# 2026-02-23
+
+## 4-train-IS.R: Train Lane 4
+
+Implemented `manipulation/4-train-IS.R` — estimates two model tiers on Mint forge artifacts and persists fitted objects for the Forecast lane. **Tier 1**: `snaive()` (seasonal naive, repeats last year's pattern). **Tier 2**: `auto.arima()` with `stepwise = FALSE, approximation = FALSE` (exhaustive search). Both models are fitted twice: once on `ts_train` for backtest evaluation, once on `ts_full` for Forecast lane persistence. All metrics (RMSE, MAE, MAPE) computed on original caseload scale after `exp()` back-transform per [EDA-001]. **Backtest results** (24-month hold-out): snaive RMSE 10,300 / MAPE 16.4%; ARIMA `(4,1,1)(1,0,0)[12]` RMSE 8,639 / MAPE 13.3% (ARIMA confirmed EDA-002's expected d=1). **Full-series ARIMA** order: `(3,1,1)(1,0,0)[12]`. Produces 3 artifacts in `./data-private/derived/models/`: `tier_1_snaive.rds`, `tier_2_arima.rds`, `model_registry.csv` (2-row hand-off contract for Lane 5). `forge_hash: 3ef1c81a04b78581f3df84e0a68f1504` stamped in registry for Mint–Train lineage. Activated in `flow.R`. Detailed log: `ai/memory/log/2026-02-23-train-lane-4.md`.
+
+---
+
 # 2026-02-20
 
 ## 6-pattern pipeline architecture

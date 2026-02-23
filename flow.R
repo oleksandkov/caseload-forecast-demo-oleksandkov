@@ -153,7 +153,7 @@ ds_rail  <- tibble::tribble(
   # PHASE 4: TRAIN (Model Estimation)
   # ===============================
   # Train lanes consume Mint artifacts only (never Ellis output directly).
-  #"run_r"     , "manipulation/4-train-IS.R",           # Estimate model tiers (naive, ARIMA, ARIMA+xreg)
+   "run_r"     , "manipulation/4-train-IS.R",           # Estimate model tiers (naive, ARIMA, ARIMA+xreg)
 
   # ===============================
   # PHASE 5: FORECAST (Prediction)
