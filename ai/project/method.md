@@ -96,25 +96,27 @@ EDA operates on Ellis output and produces analytical insight (reports, visualiza
 
 - **Deliverable**: Static HTML combining EDA + model performance + 24-month forecast visualization
 - **Interactivity**: Optional Plotly/htmlwidgets for hover details (keep simple; avoid heavy JS dependencies)
-- **Delivery**: Manual publish to SharePoint/network drive (Phase 1); Azure Static Web App + AAD auth (Phase 2)
+- **Delivery**: Manual publish to SharePoint/network drive (Phase 1); cloud-hosted web app with identity-provider auth (Phase 2; e.g., Azure Static Web Apps + Entra ID, Snowflake Streamlit)
 
 ## Reproducibility Standards
 
 - **Version control**: Git tracks all code, config, and documentation; data files in `.gitignore` (too large, privacy)
-- **Dependency management**: `renv.lock` for R packages; `conda`/`mamba` for Python (if Azure migration requires)
+- **Dependency management**: `renv.lock` for R packages; `conda`/`mamba` for Python (if cloud migration requires)
 - **Random seeds**: Set `set.seed(42)` before any stochastic operation; document in script headers
 - **Configuration**: `config.yml` stores `focal_date`, file paths, model hyperparameters (no hardcoded magic numbers)
 - **Execution order**: `flow.R` orchestrates full pipeline; each stage sources common functions from `./scripts/`
 - **Determinism**: Forecasts are deterministic given fixed seed and package versions (no model randomness beyond seed)
 
-## Azure ML Migration Strategy (Phase 2)
+## Cloud Migration Strategy (Phase 2)
 
-- **R vs. Python**: Keep data wrangling in R (ferry/ellis patterns stable); consider Python for model training if Azure ML integration is smoother
-- **Compute allocation**: Use cheap CPU instances for ferry/ellis; evaluate GPU necessity for complex models (unlikely for ARIMA)
-- **Model registry**: Transition from local model `.rds` files to Azure ML model registry with MLflow tracking; data artifacts already in Parquet align natively with Azure ML `TabularDataset`
-- **Endpoint serving**: Deploy best-performing model as REST API endpoint for programmatic access (e.g., Power BI integration)
-- **Pipeline orchestration**: Refactor `flow.R` into Azure ML pipeline with parameterized components (one pipeline step = one pattern/lane)
-- **Scheduling**: Monthly refresh via Azure ML scheduled pipeline runs (replaces manual `Rscript flow.R` execution)
+This repo is the cloud-agnostic on-prem core. Provider-specific adaptations live in fork repositories (`caseload-forecast-demo-azure`, `caseload-forecast-demo-snowflake`). The workspace also includes `azure-aml-demo` as a read-only reference for Azure ML patterns.
+
+- **R vs. Python**: Keep data wrangling in R (ferry/ellis patterns stable); consider Python for model training if cloud platform integration is smoother (most cloud ML platforms have stronger Python SDKs)
+- **Compute allocation**: Use affordable compute tiers for ferry/ellis; evaluate GPU necessity for complex models (unlikely for ARIMA). Examples: Azure ML compute instances, Snowflake warehouses
+- **Model registry**: Transition from local model `.rds` files to a cloud model registry with MLflow tracking (e.g., Azure ML Model Registry, Snowflake Model Registry); data artifacts already in Parquet align natively with cloud-native tabular dataset APIs
+- **Endpoint serving**: Deploy best-performing model as a REST API or model-serving endpoint for programmatic access (e.g., Azure ML endpoints, Snowflake Model Serving, Power BI integration)
+- **Pipeline orchestration**: Refactor `flow.R` into a cloud ML pipeline with parameterized components — one pipeline step per pattern/lane (e.g., Azure ML Pipelines, Snowflake Tasks, or Airflow DAGs)
+- **Scheduling**: Monthly refresh via cloud-scheduled pipeline runs (replaces manual `Rscript flow.R` execution)
 
 ## Mint-Train-Forecast Lineage
 
@@ -124,7 +126,7 @@ The Mint, Train, and Forecast patterns form a versioned chain keyed by `focal_da
 - **Train** records `forge_hash` in the model registry CSV, linking each fitted model to its exact input data slice
 - **Forecast** inherits lineage through the model object it consumes
 - Changing `focal_date` in `config.yml` invalidates all Mint, Train, and Forecast artifacts
-- This is the minimum viable versioning strategy for Phase 1; Phase 2 transitions to Azure ML model registry with MLflow tracking
+- This is the minimum viable versioning strategy for Phase 1; Phase 2 transitions to a cloud model registry with MLflow tracking (e.g., Azure ML Model Registry, Snowflake Model Registry)
 
 ## Quality Assurance
 

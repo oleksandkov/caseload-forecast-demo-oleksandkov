@@ -58,7 +58,7 @@ Prediction generation pattern that produces forward-looking forecasts from Train
 Final deliverable assembly pattern that combines EDA, model performance, and forecasts into publication-ready output.
 - **Input**: EDA reports, Train performance metrics, Forecast outputs
 - **Output**: Static HTML report for stakeholder delivery
-- **Delivery**: SharePoint/network drive (Phase 1); Azure Static Web App + AAD auth (Phase 2)
+- **Delivery**: SharePoint/network drive (Phase 1); cloud-hosted web app with identity-provider auth (Phase 2; e.g., Azure Static Web Apps + Entra ID, Snowflake Streamlit)
 
 ### EDA (Exploratory Data Analysis)
 Exploratory analysis that operates on Ellis output. EDA is **not a numbered lane** in the pipeline — it is a lateral analytical activity that produces reports and insight, not data artifacts consumed by downstream scripts. EDA findings are codified as documented decisions in Mint scripts (e.g., `[EDA-001] Log transform: TRUE`).
@@ -172,37 +172,37 @@ Regular, predictable patterns that repeat over fixed periods (e.g., monthly cycl
 
 ---
 
-## Azure ML Terminology (from transcript)
+## Cloud ML Terminology
 
-### Azure Machine Learning (AML)
-Microsoft's cloud service for end-to-end machine learning workflows: data prep, model training, deployment, and MLOps.
+### Cloud ML Platform
+Managed cloud service for end-to-end machine learning workflows: data prep, model training, deployment, and MLOps. Examples: Azure Machine Learning (AML), Snowflake ML, AWS SageMaker, GCP Vertex AI.
 
 ### Compute Instance
-Managed cloud VM for development work (Jupyter notebooks, VS Code remote). Billed per hour when running. Example: `Standard_DS3_v2` (4 cores, general-purpose CPU).
+Managed cloud VM or virtual warehouse for development work (Jupyter notebooks, VS Code remote, Snowflake worksheets). Billed per hour or per credit when running. Examples: Azure `Standard_DS3_v2`, Snowflake `X-Small` warehouse.
 
 ### Compute Cluster
-Scalable pool of VMs for distributed training or batch inference. Auto-scales from 0 to N nodes based on workload.
+Scalable pool of compute resources for distributed training or batch inference. Auto-scales from 0 to N nodes/credits based on workload. Examples: Azure ML compute clusters, Snowflake multi-cluster warehouses.
 
 ### Workspace
-Top-level Azure ML resource that groups models, datasets, compute, and experiments. Allows resource isolation and access control across teams/projects.
+Top-level cloud ML resource that groups models, datasets, compute, and experiments. Allows resource isolation and access control across teams/projects. Examples: Azure ML Workspace, Snowflake Database/Schema.
 
 ### Model Registry
-Centralized catalog of trained models with versioning, metadata, and lineage tracking. Enables A/B testing and rollback.
+Centralized catalog of trained models with versioning, metadata, and lineage tracking. Enables A/B testing and rollback. Examples: Azure ML Model Registry, Snowflake Model Registry, MLflow Model Registry.
 
 ### MLflow
-Open-source framework for tracking experiments, packaging models, and ensuring portability across platforms (not locked into Azure).
+Open-source framework for tracking experiments, packaging models, and ensuring portability across platforms. Vendor-neutral — supported by Azure ML, Snowflake, Databricks, and others.
 
 ### Endpoint
-Deployed model as a REST API for real-time or batch inference. Can route traffic across multiple model versions (blue-green deployment).
+Deployed model as a REST API or serving layer for real-time or batch inference. Can route traffic across multiple model versions (blue-green deployment). Examples: Azure ML endpoints, Snowflake Model Serving.
 
 ### Blue-Green Deployment
 Strategy for testing new model versions in production by gradually shifting traffic from old (blue) to new (green) and monitoring performance before full cutover.
 
-### Pipeline (Azure ML)
-Directed acyclic graph (DAG) of processing steps (data prep → training → evaluation → deployment). Parameterized and schedulable.
+### Pipeline (Cloud ML)
+Directed acyclic graph (DAG) of processing steps (data prep → training → evaluation → deployment). Parameterized and schedulable. Examples: Azure ML Pipelines, Snowflake Tasks, Apache Airflow DAGs.
 
 ### Auto ML
-Azure ML feature that automatically tries multiple algorithms and hyperparameters to find the best model for a given dataset and metric.
+Cloud ML platform feature that automatically tries multiple algorithms and hyperparameters to find the best model for a given dataset and metric. Available in Azure ML, Snowflake ML (via Snowpark ML), and other platforms.
 
 ---
 
@@ -227,10 +227,10 @@ Alberta government program providing financial assistance to Albertans in need. 
 Government of Alberta team responsible for analytics, forecasting, and reporting for social programs.
 
 ### GoA (Government of Alberta)
-Provincial government; context for data security, AAD authentication, and report distribution policies.
+Provincial government; context for data security, identity-provider authentication, and report distribution policies.
 
-### AAD (Azure Active Directory)
-Microsoft's cloud-based identity service. Used for single sign-on and access control to GoA Azure resources. Now called **Microsoft Entra ID**.
+### Cloud Identity Provider
+Cloud-based identity and access management service used for single sign-on and access control to organizational resources. Primary example: **Microsoft Entra ID** (formerly Azure Active Directory / AAD). Snowflake uses its own RBAC system and can federate with external identity providers.
 
 ---
-*This glossary is a living document. Update as project scope evolves or new Azure features are adopted.*
+*This glossary is a living document. Update as project scope evolves or new cloud platform features are adopted.*
