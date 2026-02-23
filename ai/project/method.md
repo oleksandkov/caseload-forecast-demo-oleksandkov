@@ -12,10 +12,21 @@ This project follows a **ferry-ellis-mint-train-forecast-report** pipeline adapt
 
 ## Pipeline Stages
 
+| # | Pattern      | Alias       | Key Input                      | Key Output                              | Forbidden                          |
+|---|--------------|-------------|------------------------------- |-----------------------------------------|------------------------------------|
+| 1 | **Ferry**    | Ingestion   | Open Alberta CSV / local file  | Staging parquet / SQLite                | Semantic transforms, renaming      |
+| 2 | **Ellis**    | Transform   | Ferry staging output           | Analysis-ready parquet + CACHE-manifest | Model fitting, new data sourcing |
+| — | *(EDA)*      | *(Advisory)*| Ellis parquet                  | Reports & insight only                  | Producing consumed data artifacts  |
+| 3 | **Mint**     | Prep        | Ellis parquet + EDA decisions  | `forge/` parquet slices + `forge_manifest.yml` | Model fitting, re-running Ellis |
+| 4 | **Train**    | Estimation  | Mint artifacts only            | Model `.rds` + model registry CSV       | Reading Ellis output directly      |
+| 5 | **Forecast** | Prediction  | Train `.rds` + Mint full slice | Forecast CSV + Quarto report            | Refitting models                   |
+| 6 | **Report**   | Delivery    | EDA + Train metrics + Forecast | Static HTML                             | New data transformations           |
+
+
 ### 1. Ferry Pattern (Data Ingestion)
 - **Input**: CSV from Open Alberta URL or local cache (`./data-private/raw/`)
 - **Process**: Download if missing, validate schema, minimal SQL-like filtering (no semantic transforms)
-- **Output**: Staging data in `./data-public/derived/` (parquet + CACHE DB if using DuckDB)
+- **Output**: Staging data in `./data-raw/derived/` (parquet + CACHE DB if using DuckDB)
 - **Validation**: Row counts, date range checks, missing value inventory
 
 ### 2. Ellis Pattern (Data Transformation)
@@ -26,7 +37,7 @@ This project follows a **ferry-ellis-mint-train-forecast-report** pipeline adapt
   - Clean numeric values (remove commas, handle suppressed cells)
   - Create derived temporal features: fiscal year, month labels, lag features
   - Filter to analysis-ready subset (e.g., Alberta total, caseload measure only)
-- **Output**: Analysis-ready dataset in `./data-public/derived/` + CACHE-manifest.md
+- **Output**: Analysis-ready dataset in `./data-raw/derived/` + CACHE-manifest.md
 - **Quality checks**: No missing dates in series, monotonic time index, documented factor levels
 
 ### EDA (Exploratory Data Analysis) — Advisory, Not a Numbered Lane
