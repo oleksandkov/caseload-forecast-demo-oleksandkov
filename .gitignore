@@ -104,6 +104,8 @@ Desktop.ini
 .~*.xlsx#
 
 # ---- reporting-files --------------------------------------
+# Private memos and internal briefing notes - never upload
+analysis/memo-1/
 analysis/*/*.png
 analysis/*/*.jpg
 analysis/*/*.html
