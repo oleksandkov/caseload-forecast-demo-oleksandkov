@@ -342,10 +342,101 @@ Dimensions:
 
 #### Next Steps in Pipeline
 
-1. **Ellis lane** (`2-ellis.R` - to be created): Transform raw staging to analysis-ready
-2. **EDA report** (`analysis/eda-1/eda-1.qmd`): Exploratory analysis with visualizations
-3. **Model training** (future): ARIMA forecasting scripts
-4. **Forecast report** (future): 24-month horizon predictions
+1. **Ellis lane** (`2-ellis.R`): Transform raw staging to analysis-ready
+2. **EDA reports** (`analysis/eda-2/`): Exploratory time-series analysis
+3. **Mint lane** (`3-mint-IS.R`): Prepare model-ready data slices
+4. **Train lane** (`4-train-IS.R`): Estimate Tier 1–2 models
+5. **Forecast lane** (`5-forecast-IS.R`): Generate 24-month horizon predictions — see below
+
+---
+
+### `5-forecast-IS.R` — 24-Month Horizon Forecast Generation
+
+**Phase**: Forecast (Pattern 5 of 6)  
+**Pattern**: Forecast (consumes Train `.rds` objects, produces prediction artifacts)  
+**Status**: Active in pipeline  
+**Execution time**: ~3 seconds
+
+#### Purpose
+
+Generate 24-month forward projections and backtest diagnostics for all trained model
+tiers, producing structured artifacts that the Report lane consumes directly without
+additional computation.
+
+#### Input
+
+| Source | File | Description |
+|--------|------|--------------|
+| Train output | `data-private/derived/models/model_registry.csv` | Model metadata, paths, backtest metrics |
+| Train output | `data-private/derived/models/tier_1_snaive.rds` | Seasonal naive model (fitted on ts_full) |
+| Train output | `data-private/derived/models/tier_2_arima.rds` | ARIMA model (fitted on ts_full) |
+| Mint output | `data-private/derived/forge/ds_full.parquet` | Full 246-month series (date, caseload, y) |
+| Mint output | `data-private/derived/forge/forge_manifest.yml` | forge_hash for lineage validation |
+
+#### Output
+
+All artifacts written to `./data-private/derived/forecast/`:
+
+| File | Rows | Description |
+|------|------|-------------|
+| `forecast_long.csv` | 48 | Long format: one row per model × forecast month; point + 80%/95% intervals |
+| `forecast_wide.csv` | 24 | Wide format: one forecast month per row; models as column groups |
+| `backtest_comparison.csv` | 48 | In-sample fitted vs actual for test window (Oct 2023–Sep 2025) |
+| `model_performance.csv` | 2 | RMSE, MAE, MAPE from Train lane hold-out evaluation |
+| `forecast_manifest.yml` | — | Lineage YAML: forecast_hash, forge_hash consumed, artifact inventory |
+
+**Forecast window**: Oct 2025 – Sep 2027 (24 months from focal_date)
+
+#### Forecast Columns (forecast_long.csv)
+
+```
+date             Date    Forecast month (first of month)
+year             int     Calendar year
+month            int     Month number (1–12)
+fiscal_year      chr     Alberta FY label (e.g. "FY 2025-26")
+month_label      chr     Readable label (e.g. "Oct 2025")
+model_id         chr     "tier_1_snaive" | "tier_2_arima"
+tier             int     1 | 2
+tier_label       chr     "Naive Baseline" | "ARIMA"
+point_forecast   num     Original caseload scale (exp back-transformed)
+lo_80 / hi_80    num     80% prediction interval bounds
+lo_95 / hi_95    num     95% prediction interval bounds
+```
+
+#### Lineage Validation
+
+Section 3 validates `forge_hash` from the model registry matches the current
+`forge_manifest.yml`. If Mint was re-run after Training, the script stops with an
+explicit error message instructing the analyst to re-run lanes 3 and 4 first.
+
+#### Forbidden
+
+- Refitting models (no `auto.arima()` or `snaive()` calls in this script)
+- Reading Ellis output directly
+- Producing new data transformations
+
+#### Report Lane Usage
+
+```r
+# In 6-report-IS.qmd:
+dir_fc <- config$directories$forecast
+forecast_long     <- read.csv(file.path(dir_fc, "forecast_long.csv"))
+forecast_wide     <- read.csv(file.path(dir_fc, "forecast_wide.csv"))
+backtest          <- read.csv(file.path(dir_fc, "backtest_comparison.csv"))
+performance       <- read.csv(file.path(dir_fc, "model_performance.csv"))
+fc_manifest       <- yaml::read_yaml(file.path(dir_fc, "forecast_manifest.yml"))
+
+# Ribbon forecast plot:
+ggplot(forecast_long, aes(x = as.Date(date), y = point_forecast,
+                           colour = tier_label, fill = tier_label)) +
+  geom_ribbon(aes(ymin = lo_95, ymax = hi_95), alpha = 0.15) +
+  geom_ribbon(aes(ymin = lo_80, ymax = hi_80), alpha = 0.25) +
+  geom_line() +
+  facet_wrap(~tier_label) +
+  labs(title = "Alberta Income Support: 24-Month Forecast",
+       x = NULL, y = "Active Caseload") +
+  theme_bw()
+```
 
 ---
 
@@ -565,10 +656,10 @@ See `./ai/project/method.md` for the Mint-Train-Forecast Lineage section.
 
 ## Maintenance Notes
 
-**Last Pipeline Execution**: 2025-02-18  
-**Scripts in Flow**: 2 (1 R script, 1 Quarto report)  
-**Scripts Documented**: 3 non-flow, 1 flow  
-**Next Addition**: `3-mint-IS.R` (mint lane for preparing model-ready data slices from Ellis output)
+**Last Pipeline Execution**: 2026-02-23  
+**Scripts in Flow**: 5 (1-ferry, 2-ellis, 3-mint-IS, 4-train-IS, 5-forecast-IS)  
+**Scripts Documented**: 3 non-flow, 2 flow (1-ferry, 5-forecast-IS)  
+**Next Addition**: `6-report-IS.qmd` — Static HTML report combining EDA, backtesting diagnostics, and 24-month forecast visualisations
 
 **Update Frequency**: Update this document when:
 - Adding new scripts to `flow.R`

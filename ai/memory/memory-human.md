@@ -6,12 +6,17 @@ Human decisions and reasoning. AI copilots are prohibited to edit this file.
 
 # 2026-02-23
 
-Data Engineer, compose 4-train-IS.R
+## 5-forecast
 
+Data Engineer, compose 5-forecast-IS.R script that would implement lane 5 and create forecasting artefacts, according the method.md. Focus on the first two model teir only. Study commit 8a11f22220ca4dc63b624d5db24b34a87a726841 to inform your model hand-off. Anticipate the needs of the  lane 6 Report to create various reproducible documents from results of the mint-train-forecast processes.  Create a brief entry into memory-ai and a detailed account into the memory/log/. These documens should be useful to agents who will consume the products of the  lane 5 forecast. 
+
+## 4-train  
+
+Data Engineer, compose 4-train-IS.R script that would implement lane 4 and train models according to the method.md. Focus on the first two models only, to keep things simple. Consider how 5-model-IS.R will be consuming the project of the 4-train process and inform your design decision about model hand-off on this.  
 
 # 2026-02-20
 
-Data engineer, compose 3-mint-a.R that would output data of class "A" that support 
+Data engineer, compose 3-mint-a.R that would output data of class "A" that support  
 
 # 2026-02-18
 

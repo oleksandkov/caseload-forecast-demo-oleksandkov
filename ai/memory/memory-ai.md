@@ -6,6 +6,12 @@ AI system status and technical briefings.
 
 # 2026-02-23
 
+## 5-forecast-IS.R: Forecast Lane 5
+
+Implemented `manipulation/5-forecast-IS.R` — generates 24-month forward projections (Oct 2025 – Sep 2027) by loading Train `.rds` model objects and calling `forecast(readRDS(rds_path), h = 24)`. No model refitting. All forecast outputs `exp()` back-transformed per [EDA-001]. **Critical design**: Section 3 validates `forge_hash` from `model_registry.csv` against current `forge_manifest.yml` before loading any model; mismatch triggers a hard stop with instructions to re-run lanes 3–4. **Backtest diagnostics note**: `backtest_comparison.csv` contains in-sample `fitted()` values from full-series models (visual use only); true accuracy numbers (RMSE/MAE/MAPE) are in `model_performance.csv` (sourced from Train's hold-out evaluation). Produces 5 artifacts in `./data-private/derived/forecast/`: `forecast_long.csv` (48 rows: 2 models × 24 months, primary ggplot target), `forecast_wide.csv` (24 rows, kable table target), `backtest_comparison.csv` (48 rows), `model_performance.csv` (2 rows: snaive RMSE 10,300 / MAPE 16.4%; ARIMA RMSE 8,639 / MAPE 13.3%), `forecast_manifest.yml` (lineage YAML: `forecast_hash: fa43528f49351759fe7b2742c44444ef` → `forge_hash: 3ef1c81a04b78581f3df84e0a68f1504`). Added `directories.forecast` to `config.yml`; activated in `flow.R` Phase 5. Detailed log: `ai/memory/log/2026-02-23-forecast-lane-5.md`.
+
+---
+
 ## 4-train-IS.R: Train Lane 4
 
 Implemented `manipulation/4-train-IS.R` — estimates two model tiers on Mint forge artifacts and persists fitted objects for the Forecast lane. **Tier 1**: `snaive()` (seasonal naive, repeats last year's pattern). **Tier 2**: `auto.arima()` with `stepwise = FALSE, approximation = FALSE` (exhaustive search). Both models are fitted twice: once on `ts_train` for backtest evaluation, once on `ts_full` for Forecast lane persistence. All metrics (RMSE, MAE, MAPE) computed on original caseload scale after `exp()` back-transform per [EDA-001]. **Backtest results** (24-month hold-out): snaive RMSE 10,300 / MAPE 16.4%; ARIMA `(4,1,1)(1,0,0)[12]` RMSE 8,639 / MAPE 13.3% (ARIMA confirmed EDA-002's expected d=1). **Full-series ARIMA** order: `(3,1,1)(1,0,0)[12]`. Produces 3 artifacts in `./data-private/derived/models/`: `tier_1_snaive.rds`, `tier_2_arima.rds`, `model_registry.csv` (2-row hand-off contract for Lane 5). `forge_hash: 3ef1c81a04b78581f3df84e0a68f1504` stamped in registry for Mint–Train lineage. Activated in `flow.R`. Detailed log: `ai/memory/log/2026-02-23-train-lane-4.md`.

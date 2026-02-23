@@ -158,7 +158,7 @@ ds_rail  <- tibble::tribble(
   # ===============================
   # PHASE 5: FORECAST (Prediction)
   # ===============================
-  #"run_r"     , "manipulation/5-forecast-IS.R",        # Generate 24-month horizon forecasts
+   "run_r"     , "manipulation/5-forecast-IS.R",        # Generate 24-month horizon forecasts
 
   # ===============================
   # PHASE 6: REPORT (Deliverables)
