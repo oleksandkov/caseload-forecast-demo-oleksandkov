@@ -24,7 +24,7 @@
 #' ============================================================================
 
 #+ echo=F
-# rmarkdown::render(input = "./manipulation/2-test-ellis-cache.R") # run to knit
+# rmarkdown::render(input = "./manipulation/nonflow/test-ellis-cache.R") # run to knit
 # ---- setup -------------------------------------------------------------------
 rm(list = ls(all.names = TRUE))
 cat("\014")

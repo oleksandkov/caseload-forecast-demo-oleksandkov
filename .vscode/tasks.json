@@ -282,7 +282,7 @@
 			"type": "shell",
 			"command": "Rscript",
 			"args": [
-				"manipulation/2-test-ellis-cache.R"
+				"manipulation/nonflow/test-ellis-cache.R"
 			],
 			"isBackground": false,
 			"group": "test",
