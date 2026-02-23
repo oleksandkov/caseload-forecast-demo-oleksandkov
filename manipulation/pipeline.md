@@ -541,7 +541,7 @@ See `./ai/project/method.md` for the Mint-Train-Forecast Lineage section.
 
 ## Reference Materials
 
-- **RAnalysisSkeleton**: `C:\Users\andriy.koval\Documents\GitHub\RAnalysisSkeleton`
+- **RAnalysisSkeleton**: [github.com/wibeasley/RAnalysisSkeleton](https://github.com/wibeasley/RAnalysisSkeleton)
   - Canonical implementation of flow pattern
   - Multiple data source examples
   - Report integration patterns

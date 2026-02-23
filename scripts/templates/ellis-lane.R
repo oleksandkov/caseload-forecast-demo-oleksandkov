@@ -1,6 +1,6 @@
 #' ---
 #' title: "Ellis Lane"
-#' author: "Andriy Koval"
+#' author: "First Last"
 #' date: "last Updated: `r Sys.Date()`"
 #' ---
 #+ echo=F

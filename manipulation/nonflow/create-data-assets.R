@@ -1,6 +1,6 @@
 #' ---
 #' title: "Create Data Assets for Multi-Source Ferry Testing"
-#' author: "Andriy Koval"
+#' author: "GoA Analytics Team"
 #' date: "2025-02-13"
 #' ---
 #'

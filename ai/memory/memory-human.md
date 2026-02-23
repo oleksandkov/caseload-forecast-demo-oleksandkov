@@ -4,14 +4,20 @@ Human decisions and reasoning. AI copilots are prohibited to edit this file.
 
 ---
 
+# 2026-02-23
+
+Data Engineer, compose 4-train-IS.R
+
+
+# 2026-02-20
+
+Data engineer, compose 3-mint-a.R that would output data of class "A" that support 
+
 # 2026-02-18
-
-
 
 ## Create EDA-2
 
 Follow the example of eda-1 and compose ./analysis/eda-2/ that would introduce the reader to the data (focus on total caseload and client type tables only, ignore other tables to keep it simple for now). Focus on timeseries for visuals, but use other graphs when necessary. 
-
 
 ## Create Ellis
 

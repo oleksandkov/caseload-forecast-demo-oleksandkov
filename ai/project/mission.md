@@ -1,14 +1,14 @@
 # Project Mission
 
-This repository provides a **cloud-migration learning sandbox** for monthly caseload forecasting. It uses publicly available Alberta Income Support data to create a complete, self-contained forecasting workflow that SDA analysts can run on-premises, then migrate to Azure ML infrastructure with guidance from Microsoft partners (Sherry Pewar, Dony Alex).
+This repository provides a **cloud-migration learning sandbox** for monthly caseload forecasting. It uses publicly available Alberta Income Support data to create a complete, self-contained forecasting workflow that analysts can run on-premises, then migrate to Azure ML infrastructure with guidance from cloud platform partners.
 
-The repo prioritizes **simplicity over realism**: model complexity is deliberately constrained to three tiers (naive baseline, ARIMA, augmented ARIMA) to focus learning on cloud orchestration, not statistical nuance. Once the Azure pipeline is stable, it will be re-grafted onto real, operationally complex SDA data.
+The repo prioritizes **simplicity over realism**: model complexity is deliberately constrained to three tiers (naive baseline, ARIMA, augmented ARIMA) to focus learning on cloud orchestration, not statistical nuance. Once the Azure pipeline is stable, it will be re-grafted onto real, operationally complex production data.
 
 ## Objectives
 
 - **Establish end-to-end on-prem pipeline**: Ferry → Ellis → Mint → Train → Forecast → Report (EDA informs Mint but is not a sequential gate; monthly refresh cadence)
-- **Demonstrate Azure ML migration path**: Understand compute instances, model registry, MLflow, endpoint serving, and orchestration for SDA use cases
-- **Enable SDA analyst fluency**: Andriy Koval (solid R/stats background, new to cloud) gains hands-on experience with Azure ML concepts and terminology
+- **Demonstrate Azure ML migration path**: Understand compute instances, model registry, MLflow, endpoint serving, and orchestration for government analytics use cases
+- **Enable analyst fluency**: Analysts with solid R/stats backgrounds gain hands-on experience with Azure ML concepts and terminology
 - **Inform cloud adoption strategy**: Clarify where cloud compute is indispensable (e.g., large-scale estimation) vs. where on-prem suffices
 - **Prototype report serving & security**: Explore delivery mechanisms (static HTML → SharePoint, Azure Static Web Apps, Power BI) with AAD-based access control
 
@@ -28,10 +28,9 @@ The repo prioritizes **simplicity over realism**: model complexity is deliberate
 
 ## Stakeholders
 
-- **Andriy Koval (SDA Analyst)**: Primary user; builds pipeline, learns Azure ML, documents learnings
-- **SDA Analytics Team**: Secondary audience for static HTML reports; validates workflow patterns for reusability
-- **Sherry Pewar (Analytics Capability Centre)**: Infrastructure and product ownership guidance for Azure ML setup
-- **Dony Alex (Director, Data Centre of Excellence)**: Strategic advisor on cloud adoption patterns and SDA organizational needs
-- **Jeremy Crossman (Microsoft)**:  Senior Cloud & AI Specialist
-- **Poonam Upadhyay (Microsoft)**:  Cloud & AI Specialist
+- **Lead Analyst**: Primary user; builds pipeline, learns Azure ML, documents learnings
+- **Analytics Team**: Secondary audience for static HTML reports; validates workflow patterns for reusability
+- **Infrastructure Lead**: Infrastructure and product ownership guidance for Azure ML setup
+- **Data Strategy Lead**: Strategic advisor on cloud adoption patterns and organizational needs
+- **Cloud Platform Partners**: Azure ML specialists providing migration guidance
 

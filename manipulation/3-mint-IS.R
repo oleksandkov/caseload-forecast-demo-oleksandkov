@@ -1,6 +1,6 @@
 #' ---
 #' title: "Mint Lane 3: Income Support Model-Ready Data Preparation"
-#' author: "Andriy Koval"
+#' author: "GoA Analytics Team"
 #' date: "2026-02-20"
 #' ---
 #'

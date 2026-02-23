@@ -224,7 +224,7 @@ April 1 to March 31. Example: **FY 2025-26** runs from April 1, 2025 to March 31
 Alberta government program providing financial assistance to Albertans in need. Part of Social Development portfolio.
 
 ### Strategic Data Analytics (SDA)
-Government of Alberta team responsible for analytics, forecasting, and reporting for social programs. Led by Dony Alex.
+Government of Alberta team responsible for analytics, forecasting, and reporting for social programs.
 
 ### GoA (Government of Alberta)
 Provincial government; context for data security, AAD authentication, and report distribution policies.

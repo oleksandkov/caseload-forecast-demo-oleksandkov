@@ -1,6 +1,6 @@
 #' ---
 #' title: "Ellis Lane 2: Income Support Open Data Transformation"
-#' author: "Andriy Koval"
+#' author: "GoA Analytics Team"
 #' date: "2025-02-18"
 #' ---
 #'

@@ -1,6 +1,6 @@
 #' ---
 #' title: "Ferry Lane 1: Income Support Open Data"
-#' author: "Andriy Koval"
+#' author: "GoA Analytics Team"
 #' date: "2025-02-18"
 #' ---
 #'
