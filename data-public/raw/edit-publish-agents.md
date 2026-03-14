@@ -109,10 +109,10 @@ The conversation establishes a clear high-level vision, but several details rema
 
 - Is `configuration.prompt.md` a structured data format (YAML front matter + body) or free-form Markdown that the Publisher must interpret with natural language understanding?
 - What fields are required vs. optional? (e.g., navbar structure, file list, section titles, per-file notes)
-- How does the Publisher distinguish between "strict order of instructions" and the "short non-specific article" preamble that Sasha mentions?
+- How does the Publisher distinguish between "strict order of instructions" and the "short non-specific article" preamble that Sasha (oleksandkov) describes?
 - Should there be a formal schema or template that the Editor always produces, so the Publisher's parsing logic is deterministic?
 
-**Recommendation:** Define a minimal schema (possibly YAML-based) for `configuration.prompt.md` to reduce ambiguity for the Publisher.
+**Recommendation:** Define a minimal schema (possibly YAML-based) for `configuration.prompt.md` to reduce ambiguity for the Publisher. A structured format is strongly preferred over free-form Markdown because the Publisher is meant to be deterministic—it should parse instructions mechanically, not interpret natural language. At minimum, the schema should include: output format, navbar/section structure, an ordered file list per section, and an optional per-file notes field.
 
 ### 2. Structure and naming of the `content/` folder
 
@@ -163,7 +163,7 @@ The conversation establishes a clear high-level vision, but several details rema
 - Does the Editor need to know which Publisher will be used, or does it produce a format-neutral `content/` folder that any Publisher can consume?
 - If the Editor must tailor output to the Publisher, how does it know which Publisher is selected? (Is this specified in `description.prompt.md`?)
 - Are Publisher agents expected to share a common interface (same `configuration.prompt.md` schema), or can each define its own?
-- Sasha's description suggests the format choice happens during the Editor conversation ("just rendered md files, using quarto preset, or just vibecoding html simple website"). How does this choice propagate to the Publisher?
+- The conversation suggests the format choice happens during the Editor session (options mentioned include rendered Markdown files, a Quarto website preset, or a hand-coded HTML site). How does this choice propagate to the Publisher?
 
 **Recommendation:** Decide whether `content/` is format-neutral (Publisher adapts) or format-specific (Editor adapts). If format-specific, the chosen format should be a mandatory field in `configuration.prompt.md`.
 
